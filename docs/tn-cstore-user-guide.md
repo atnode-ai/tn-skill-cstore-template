@@ -94,7 +94,7 @@ Run `/tn-cstore-status` any time to see what is pending.
 
 ### /tn-cstore-assign
 **Use when:** a hub belongs to an area or project, or you want a new area or project.
-**You provide:** `/tn-cstore-assign Obsidian to Knowledge system`, `/tn-cstore-assign article <name> to <project>` (attach one article to one project, `-` removes it), or `/tn-cstore-assign new project <name>`.
+**You provide:** `/tn-cstore-assign Compost to Garden`, `/tn-cstore-assign article <name> to <project>` (attach one article to one project, `-` removes it), or `/tn-cstore-assign new project <name>`.
 **Does:** edits `tools/para.py`, rebuilds, checks, commits and pushes. For a new project or area it asks for the outcome (project, has an end) or the ongoing responsibility (area, no end) in one sentence, then creates the note once in `01_Projects/` or `02_Areas/`.
 **Rule of thumb:** can it be crossed off, then Project. A standard to keep up with no end, then Area. Otherwise Resource.
 
