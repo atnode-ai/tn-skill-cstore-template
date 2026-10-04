@@ -1,0 +1,32 @@
+# Tags and releases the version in VERSION. The publish command in the source vault writes
+# VERSION and the CHANGELOG.md entry and pushes main; this workflow creates the tag inside GitHub.
+# Idempotent: does nothing when the tag already exists.
+name: release
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    # only in the template itself, not in stores created from it
+    if: github.repository == 'atnode-ai/tn-skill-cstore-template'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tag and release VERSION
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          [ -f VERSION ] || { echo "no VERSION file, nothing to release"; exit 0; }
+          tag=$(tr -d '[:space:]' < VERSION)
+          [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "VERSION '$tag' is not vX.Y.Z"; exit 1; }
+          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then echo "$tag already tagged"; exit 0; fi
+          commit=$(git log -1 --format=%H -- VERSION)
+          awk -v t="$tag" 'index($0, "## " t " ") == 1 {f=1; next} /^## /{f=0} f' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "Release $tag" > notes.md
+          gh release create "$tag" --target "$commit" --title "$tag" --notes-file notes.md
+          echo "released $tag on $commit"
