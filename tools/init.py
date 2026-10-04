@@ -72,7 +72,7 @@ FILES = {
     "README.md": README,
     ".obsidian/app.json": json.dumps({"alwaysUpdateLinks": True, "attachmentFolderPath": "attachments"}, indent=2) + "\n",
 }
-IGNORE = ["__pycache__/", ".obsidian/workspace.json"]
+IGNORE = ["__pycache__/", ".obsidian/"]
 
 def missing():
     out = [d + "/" for d in DIRS if not (ROOT / d).is_dir()]
